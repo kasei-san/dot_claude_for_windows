@@ -1,0 +1,20 @@
+{
+  "env": {
+    "EDITOR": "vim",
+    "VISUAL": "vim"
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -Command \"Import-Module BurntToast; New-BurntToastNotification -Text 'Claude Code', '$CLAUDE_NOTIFICATION_MESSAGE'\""
+          }
+        ]
+      }
+    ]
+  },
+  "autoUpdatesChannel": "latest"
+}

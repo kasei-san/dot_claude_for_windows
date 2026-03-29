@@ -1,0 +1,79 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$HOME/.claude/hooks/bash-compound-allow.py\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(wmic path win32_videocontroller get:*)",
+      "Bash(powershell \"Get-PnpDevice | Where-Object { $_Class -eq ''Display'' } | Select-Object Status, Class, FriendlyName, InstanceId\")",
+      "Bash(powershell \"Get-WmiObject Win32_VideoController | Select-Object Name, Status, DriverVersion, AdapterRAM, VideoProcessor, ConfigManagerErrorCode | Format-List\")",
+      "Bash(powershell \"Get-CimInstance -ClassName Win32_PnPEntity | Where-Object { $_PNPDeviceID -like ''*VEN_10DE*DEV_2D04*'' } | Select-Object Name, Status, ConfigManagerErrorCode, ConfigManagerUserConfig\")",
+      "Bash(nvidia-smi:*)",
+      "Bash(wmic path:*)",
+      "Bash(powershell.exe:*)",
+      "Bash(python:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(wc:*)",
+      "Bash(file:*)",
+      "Bash(which:*)",
+      "Bash(where:*)",
+      "Bash(pwd:*)",
+      "Bash(echo:*)",
+      "Bash(rg:*)",
+      "Bash(git status:*)",
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(git remote:*)",
+      "Bash(git tag:*)",
+      "Bash(git stash list:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git config --get:*)",
+      "Bash(git config --list:*)",
+      "Bash(git blame:*)",
+      "Bash(git shortlog:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(gh pr checks:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh issue view:*)",
+      "Bash(gh repo view:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh api:*)",
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(git checkout:*)",
+      "Bash(git switch:*)",
+      "Bash(git branch -c:*)",
+      "Bash(git branch -m:*)",
+      "Bash(git add:*)",
+      "Bash(git stash:*)",
+      "WebSearch",
+      "WebFetch(domain:boristane.com)",
+      "WebFetch(domain:x.com)",
+      "WebFetch(domain:beincrypto.com)",
+      "WebFetch(domain:dev.classmethod.jp)",
+      "WebFetch(domain:www.anthropic.com)",
+      "WebFetch(domain:www.reddit.com)"
+    ]
+  }
+}

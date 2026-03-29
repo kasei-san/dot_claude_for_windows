@@ -1,0 +1,35 @@
+# Credentials & secrets
+.credentials.json
+
+# Session & history data
+history.jsonl
+sessions/
+projects/
+plans/
+
+# Cache & temporary files
+cache/
+paste-cache/
+shell-snapshots/
+stats-cache.json
+mcp-needs-auth-cache.json
+statsig/
+
+# Runtime data
+backups/
+debug/
+downloads/
+file-history/
+plugins/
+tasks/
+telemetry/
+todos/
+
+# Browser data
+chrome/
+
+# Auto-generated config
+config/notification_states.json
+
+# Memory (auto-managed)
+memory/
