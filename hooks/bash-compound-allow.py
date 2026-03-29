@@ -4,61 +4,33 @@ PreToolUse hook for Bash tool.
 Splits compound commands (&&, ||, ;) and checks if ALL sub-commands
 match the allowed prefixes. If so, auto-allows. Otherwise, passes
 through to normal permission handling.
+
+Allowed prefixes are derived from settings.local.json automatically.
 """
 
 import json
+import os
 import re
 import sys
 
-# Allowed command prefixes (derived from settings.local.json)
-ALLOWED_PREFIXES = [
-    "wmic path",
-    "nvidia-smi",
-    "powershell.exe",
-    "powershell ",
-    "python",
-    "ls",
-    "find",
-    "grep",
-    "cat",
-    "head",
-    "tail",
-    "wc",
-    "file ",
-    "which",
-    "where",
-    "pwd",
-    "echo",
-    "rg",
-    "git status",
-    "git log",
-    "git diff",
-    "git show",
-    "git branch",
-    "git remote",
-    "git tag",
-    "git stash",
-    "git rev-parse",
-    "git config --get",
-    "git config --list",
-    "git blame",
-    "git shortlog",
-    "git push",
-    "git commit",
-    "git checkout",
-    "git switch",
-    "git add",
-    "gh pr list",
-    "gh pr view",
-    "gh pr diff",
-    "gh pr checks",
-    "gh issue list",
-    "gh issue view",
-    "gh repo view",
-    "gh run list",
-    "gh run view",
-    "gh api",
-]
+
+def load_allowed_prefixes() -> list[str]:
+    """Load allowed Bash prefixes from settings.local.json."""
+    settings_path = os.path.join(os.path.expanduser("~"), ".claude", "settings.local.json")
+    try:
+        with open(settings_path, "r", encoding="utf-8") as f:
+            settings = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []
+
+    allow_list = settings.get("permissions", {}).get("allow", [])
+    prefixes = []
+    for entry in allow_list:
+        # Match "Bash(prefix:*)" pattern
+        m = re.match(r'^Bash\((.+?):\*\)$', entry)
+        if m:
+            prefixes.append(m.group(1))
+    return prefixes
 
 
 def split_compound_command(cmd: str) -> list[str]:
@@ -107,14 +79,11 @@ def split_compound_command(cmd: str) -> list[str]:
     return [p for p in parts if p]
 
 
-def is_allowed(cmd: str) -> bool:
+def is_allowed(cmd: str, prefixes: list[str]) -> bool:
     """Check if a single command matches any allowed prefix."""
     cmd_stripped = cmd.strip()
-    for prefix in ALLOWED_PREFIXES:
+    for prefix in prefixes:
         if cmd_stripped == prefix or cmd_stripped.startswith(prefix + " ") or cmd_stripped.startswith(prefix + "\t"):
-            return True
-        # Handle case where prefix ends with space (like "file " or "powershell ")
-        if prefix.endswith(" ") and cmd_stripped.startswith(prefix):
             return True
     return False
 
@@ -138,7 +107,11 @@ def main():
     if not sub_commands:
         sys.exit(0)
 
-    all_allowed = all(is_allowed(cmd) for cmd in sub_commands)
+    prefixes = load_allowed_prefixes()
+    if not prefixes:
+        sys.exit(0)
+
+    all_allowed = all(is_allowed(cmd, prefixes) for cmd in sub_commands)
 
     if all_allowed:
         result = {
