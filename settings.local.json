@@ -71,6 +71,7 @@
       "Bash(git add:*)",
       "Bash(git stash:*)",
       "Bash(git -C:*)",
+      "Bash(open:*)",
       "Read",
       "Write",
       "Edit",
