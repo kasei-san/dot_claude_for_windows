@@ -70,6 +70,7 @@
       "Bash(git branch -m:*)",
       "Bash(git add:*)",
       "Bash(git stash:*)",
+      "Bash(git -C:*)",
       "WebSearch",
       "WebFetch(domain:boristane.com)",
       "WebFetch(domain:x.com)",
